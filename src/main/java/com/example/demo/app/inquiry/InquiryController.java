@@ -22,39 +22,55 @@ import com.example.demo.service.InquiryService;
 public class InquiryController {
 
 	private final InquiryService inquiryService;
-	
+
 	@Autowired
 	public InquiryController(InquiryService inquiryService) {
 		this.inquiryService = inquiryService;
 	}
-	
+
 	@GetMapping
 	public String index(Model model) {
 		List<Inquiry> list = inquiryService.getAll();
+
+		Inquiry inquiry = new Inquiry();
+		inquiry.setId(4);
+		inquiry.setName("Jamie");
+		inquiry.setEmail("jamie@example.com");
+		inquiry.setContents("Hello.");
+
+		inquiryService.update(inquiry);
 		
+//		// 例外の捕捉
+//		try {
+//			inquiryService.update(inquiry);
+//		} catch (InquiryNotFoundException e) {
+//			model.addAttribute("message", e);
+//			return "error/CustomPage";
+//		}
+
 		model.addAttribute("inquiryList", list);
 		model.addAttribute("title", "Inquiry Index");
-		
+
 		return "inquiry/index";
 	}
-	
+
 	@GetMapping("/form")
-	public String form(InquiryForm inquiryForm, 
+	public String form(InquiryForm inquiryForm,
 			Model model,
 			@ModelAttribute("complete") String complete) {
 		model.addAttribute("title", "Inquiry Form");
 		return "inquiry/form";
 	}
-	
+
 	@PostMapping("/form")
 	public String formGoBack(InquiryForm inquiryForm, Model model) {
 		model.addAttribute("title", "Inquiry Form");
 		return "inquiry/form";
 	}
-	
+
 	@PostMapping("/confirm")
-	public String confirm(@Validated InquiryForm inquiryForm, 
-			BindingResult result, 
+	public String confirm(@Validated InquiryForm inquiryForm,
+			BindingResult result,
 			Model model) {
 		if(result.hasErrors()) {
 			model.addAttribute("title", "Inquiry Form");
@@ -63,7 +79,7 @@ public class InquiryController {
 		model.addAttribute("title", "Confirm Page");
 		return "inquiry/confirm";
 	}
-	
+
 	@PostMapping("/complete")
 	public String complete(@Validated InquiryForm inquiryForm,
 			BindingResult result,
@@ -73,15 +89,21 @@ public class InquiryController {
 			model.addAttribute("title", "inquiryFrom");
 			return "inquiry/form";
 		}
-		
+
 		Inquiry inquiry = new Inquiry();
 		inquiry.setName(inquiryForm.getName());
 		inquiry.setEmail(inquiryForm.getEmail());
 		inquiry.setContents(inquiryForm.getContents());
 		inquiry.setCreated(LocalDateTime.now());
-		
+
 		inquiryService.save(inquiry);
 		redirectAttributes.addFlashAttribute("complete", "Registered!");
 		return "redirect:/inquiry/form";
 	}
+	
+//	@ExceptionHandler(InquiryNotFoundException.class)
+//	public String handleException(InquiryNotFoundException e, Model model) {
+//		model.addAttribute("message", e);
+//		return "error/CustomPage";
+//	}
 }
