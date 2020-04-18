@@ -32,13 +32,13 @@ public class InquiryController {
 	public String index(Model model) {
 		List<Inquiry> list = inquiryService.getAll();
 
-		Inquiry inquiry = new Inquiry();
-		inquiry.setId(4);
-		inquiry.setName("Jamie");
-		inquiry.setEmail("jamie@example.com");
-		inquiry.setContents("Hello.");
-
-		inquiryService.update(inquiry);
+//		Inquiry inquiry = new Inquiry();
+//		inquiry.setId(4);
+//		inquiry.setName("Jamie");
+//		inquiry.setEmail("jamie@example.com");
+//		inquiry.setContents("Hello.");
+//
+//		inquiryService.update(inquiry);
 		
 //		// 例外の捕捉
 //		try {
@@ -51,7 +51,7 @@ public class InquiryController {
 		model.addAttribute("inquiryList", list);
 		model.addAttribute("title", "Inquiry Index");
 
-		return "inquiry/index";
+		return "inquiry/index_boot";
 	}
 
 	@GetMapping("/form")
@@ -59,13 +59,13 @@ public class InquiryController {
 			Model model,
 			@ModelAttribute("complete") String complete) {
 		model.addAttribute("title", "Inquiry Form");
-		return "inquiry/form";
+		return "inquiry/form_boot";
 	}
 
 	@PostMapping("/form")
 	public String formGoBack(InquiryForm inquiryForm, Model model) {
 		model.addAttribute("title", "Inquiry Form");
-		return "inquiry/form";
+		return "inquiry/form_boot";
 	}
 
 	@PostMapping("/confirm")
@@ -74,10 +74,10 @@ public class InquiryController {
 			Model model) {
 		if(result.hasErrors()) {
 			model.addAttribute("title", "Inquiry Form");
-			return "inquiry/form";
+			return "inquiry/form_boot";
 		}
 		model.addAttribute("title", "Confirm Page");
-		return "inquiry/confirm";
+		return "inquiry/confirm_boot";
 	}
 
 	@PostMapping("/complete")
@@ -87,7 +87,7 @@ public class InquiryController {
 			RedirectAttributes redirectAttributes) {
 		if(result.hasErrors()) {
 			model.addAttribute("title", "inquiryFrom");
-			return "inquiry/form";
+			return "inquiry/form_boot";
 		}
 
 		Inquiry inquiry = new Inquiry();
